@@ -1,0 +1,17 @@
+import discord from 'discord.js'
+import type {Client} from 'discord.js'
+
+
+const client: Client = new discord.Client();
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user!.tag}!`);
+});
+
+client.on('message', msg => {
+  if (msg.content === 'ping') {
+    msg.reply('pong');
+  }
+});
+
+client.login('token');
