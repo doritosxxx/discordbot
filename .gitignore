@@ -3,6 +3,7 @@
 
 # Prod Bundle
 /build
+/music
 
 package-lock.json
 
