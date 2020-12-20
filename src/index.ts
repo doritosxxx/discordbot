@@ -44,8 +44,17 @@ async function handleReactions(msg:Message): Promise<void>{
 async function handleCommand(msg:Message): Promise<void> {
 	if(!msg.content.startsWith(PREFIX) || msg.content === PREFIX)
 		return;
+		
+	const args:string[] = []
+	const matches = msg.content.slice(PREFIX.length).trim().match(/(".+?"|[^\s]+)/gu)
+	if(matches !== null)
+		for(const match of matches)
+			if( match.length > 0 && match[0] === '\"' && match[match.length-1] === '\"' )
+				args.push(match.slice(1, match.length-1))
+			else 
+				args.push(match)
+		
 
-	const args = msg.content.slice(PREFIX.length).trim().split(new RegExp(" +"))
 	const name:string = args.shift()!
 
 	const command:ICommand|undefined = commands.get(name)
@@ -53,6 +62,7 @@ async function handleCommand(msg:Message): Promise<void> {
 		throw new UserError(`Команда !${name} не найдена`)
 
 	await command.execute(msg, args)
+
 }
 
 // Bot events.
