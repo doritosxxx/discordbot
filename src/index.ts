@@ -73,11 +73,11 @@ client.on("message", async (msg) => {
 		return;
 
 	handleCommand(msg)
-	.catch(error =>{
+	.catch(error => {
 		if(error instanceof UserError)
 			msg.reply(error.message)
 		else 
-		console.error(error)
+			console.error(error)
 	})
 
 	
