@@ -15,9 +15,7 @@ class CommandPhonk implements ICommand {
 		
 		const connection:VoiceConnection = await message.member.voice.channel.join()
 		
-		const p = path.resolve(__dirname, "../../../music/Velasko - 1.mp3")
-		
-		const dispatcher: StreamDispatcher = connection.play(p)
+		const dispatcher: StreamDispatcher = connection.play(path.resolve(__dirname, "../../../static/audio/Velasko - 1.mp3"))
 		await message.reply("Ща навалю")
 		
 		//TODO
