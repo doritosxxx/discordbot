@@ -52,7 +52,7 @@ async function handleCommand(msg:Message): Promise<void> {
 	if(command === undefined)
 		throw new UserError(`Команда !${name} не найдена`)
 
-	command.execute(msg, args)
+	await command.execute(msg, args)
 }
 
 // Bot events.
@@ -68,15 +68,19 @@ client.on("message", async (msg) => {
 
 	handleReactions(msg)
 	
+	// Cum zone.
 	if(msg.author.id !== ADMIN_ID)
 		return;
 
 	handleCommand(msg)
 	.catch(error =>{
-		if(error instanceof UserError){
+		if(error instanceof UserError)
 			msg.reply(error.message)
-		}
+		else 
+		console.error(error)
 	})
+
+	
 
 })
 
