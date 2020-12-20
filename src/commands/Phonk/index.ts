@@ -9,18 +9,18 @@ class CommandPhonk implements ICommand {
 	description:string = 'Чиста навилить пхонка'
 	
 	async execute(message:Message, args: string[]): Promise<void>{
-		//await message.reply("Ща навалю")
-
+		
 		if(!message.member?.voice.channel)
-			throw new ConditionError("Чтобы навалить пхонка нужно находиться в голосовом канале")
-			
+		throw new ConditionError("Чтобы навалить пхонка нужно находиться в голосовом канале")
+		
 		const connection:VoiceConnection = await message.member.voice.channel.join()
-
-		const p = path.resolve(__dirname, "http://listen5.myradio24.com:9000/doritosxxx.m3u")
-
+		
+		const p = path.resolve(__dirname, "../../../music/Velasko - 1.mp3")
+		
 		const dispatcher: StreamDispatcher = connection.play(p)
+		await message.reply("Ща навалю")
 		
-		
+		//TODO
 	}
 }
 
