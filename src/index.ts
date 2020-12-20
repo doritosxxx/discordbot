@@ -5,6 +5,7 @@ import discord from "discord.js"
 
 import emojis from './emojis'
 import ICommand from './class/ICommand'
+import { UserError } from './error'
 
 // Environment variables.
 require("dotenv").config()
@@ -47,11 +48,9 @@ async function handleCommand(msg:Message): Promise<void> {
 	const args = msg.content.slice(PREFIX.length).trim().split(new RegExp(" +"))
 	const name:string = args.shift()!
 
-	console.log(name, args.join('-'))
-
 	const command:ICommand|undefined = commands.get(name)
 	if(command === undefined)
-		throw new Error("asd") // TODO: create errors hierarchy.
+		throw new UserError(`Команда !${name} не найдена`)
 
 	command.execute(msg, args)
 }
@@ -73,6 +72,11 @@ client.on("message", async (msg) => {
 		return;
 
 	handleCommand(msg)
+	.catch(error =>{
+		if(error instanceof UserError){
+			msg.reply(error.message)
+		}
+	})
 
 })
 
