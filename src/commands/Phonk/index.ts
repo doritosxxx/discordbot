@@ -1,12 +1,16 @@
 import ICommand from '../../class/ICommand'
 import type { Message, StreamDispatcher, VoiceChannel, VoiceConnection } from 'discord.js'
 import { ConditionError } from '../../error'
-
 import path from 'path'
+
+const prefix:string = process.env.PREFIX!
 
 class CommandPhonk implements ICommand {
 	name:string = 'phonk'
 	description:string = 'Чиста навилить пхонка'
+	help:string = [
+		`${prefix}phonk - Навалить фонка в войс`
+	].join("\n")
 	
 	async execute(message:Message, args: string[]): Promise<void>{
 		

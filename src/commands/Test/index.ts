@@ -4,6 +4,7 @@ import type { Message } from 'discord.js'
 class CommandTest implements ICommand {
 	name:string = 'args'
 	description:string = 'pee pee poo poo check'
+	help:string = 'пох'
 	
 	async execute(message:Message, args: string[]): Promise<void>{
 		await message.reply(`args: [${args.join(", ")}]`)

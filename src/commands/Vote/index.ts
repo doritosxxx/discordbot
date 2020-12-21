@@ -4,9 +4,12 @@ import type { Message, VoiceConnection, StreamDispatcher } from 'discord.js'
 import { ArgumentError } from '../../error'
 import Emojis from '../../emojis'
 
+const prefix:string = process.env.PREFIX!
+
 class CommandVote implements ICommand {
 	name:string = 'vote'
 	description:string = 'Голосование'
+	help:string = `${prefix}vote <choice1> <choice2?> ... <choice10?> - Начать голосование`
 	
 	async execute(message:Message, args: string[]): Promise<void>{
 		if(args.length === 0)
