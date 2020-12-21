@@ -1,23 +1,18 @@
-import fs from 'fs'
-import path from 'path'
 import type { Client, Message } from "discord.js"
 import discord from "discord.js"
 
 import emojis from './emojis'
 import ICommand from './class/ICommand'
-import { UserError } from './error'
+import { InternalError, UserError } from './error'
 
 // Environment variables.
 require("dotenv").config()
 
+
 // Dynamic command import.
-const commandsDir = path.resolve(__dirname, './commands')
+import { getCommands } from './utils'
 const commands = new discord.Collection<string, ICommand>()
-fs.readdirSync( commandsDir )
-	.forEach(filename => {
-		const command:ICommand = require( `${commandsDir}/${filename}` ).default;
-		commands.set(command.name, command)
-	})
+getCommands().forEach(command => commands.set(command.name, command))
 
 
 const PREFIX = process.env.PREFIX!
@@ -55,11 +50,11 @@ async function handleCommand(msg:Message): Promise<void> {
 				args.push(match)
 		
 
-	const name:string = args.shift()!
+	const name:string = args.shift()!.toLowerCase()
 
 	const command:ICommand|undefined = commands.get(name)
 	if(command === undefined)
-		throw new UserError(`Команда !${name} не найдена`)
+		throw new InternalError(`Команда !${name} не найдена`)
 
 	await command.execute(msg, args)
 
@@ -77,20 +72,18 @@ client.on("message", async (msg) => {
 	console.log(`message from ${msg.author.username}`)
 
 	handleReactions(msg)
-	
+
+	handleCommand(msg)
+		.catch(error => {
+			if(error instanceof UserError)
+				msg.reply(error.message)
+			else 
+				console.error(error)
+		})
+
 	// Cum zone.
 	if(msg.author.id !== ADMIN_ID)
 		return;
-
-	handleCommand(msg)
-	.catch(error => {
-		if(error instanceof UserError)
-			msg.reply(error.message)
-		else 
-			console.error(error)
-	})
-
-	
 
 })
 
