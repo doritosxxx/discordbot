@@ -5,6 +5,8 @@ import emojis from './emojis'
 import ICommand from './class/ICommand'
 import { InternalError, UserError } from './error'
 
+import * as db from './database'
+
 // Environment variables.
 require("dotenv").config()
 
@@ -16,6 +18,7 @@ getCommands().forEach(command => commands.set(command.name, command))
 
 
 const PREFIX = process.env.PREFIX!
+// Deprecated.
 const ADMIN_ID = "391999104764608514"
 
 const client: Client = new discord.Client()
@@ -87,6 +90,18 @@ client.on("message", async (msg) => {
 
 })
 
+
+client.on("guildCreate", async guild => {
+	await db.guild.create(+guild.id)
+})
+
+client.on("guildDelete", async guild => {
+	await db.guild.delete(+guild)
+})
+
+client.on("disconnect", async () => {
+	await db.prisma.$disconnect()
+})
 
 client.login(process.env.DISCORD_TOKEN)
 
