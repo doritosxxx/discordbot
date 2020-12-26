@@ -1,15 +1,16 @@
-import type { Client, Message } from "discord.js"
+import client from './runtime/Client'
+import { Message } from "discord.js"
 import discord from "discord.js"
 
 import emojis from './emojis'
 import ICommand from './class/ICommand'
 import { InternalError, UserError } from './error'
+import VoiceStream from "./runtime/VoiceStream"
 
 import * as db from './database'
 
 // Environment variables.
 require("dotenv").config()
-
 
 // Dynamic command import.
 import { getCommands } from './utils'
@@ -20,9 +21,6 @@ getCommands().forEach(command => commands.set(command.name, command))
 const PREFIX = process.env.PREFIX!
 // Deprecated.
 const ADMIN_ID = "391999104764608514"
-
-const client: Client = new discord.Client()
-
 
 // Handlers.
 
@@ -66,6 +64,7 @@ async function handleCommand(msg:Message): Promise<void> {
 // Bot events.
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user!.tag}!`)
+	VoiceStream.onBoot()
 })
 
 client.on("message", async (msg) => {

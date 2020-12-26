@@ -9,7 +9,7 @@ class TrackMethods {
 	static async enqueue(guildId: number, url: string): Promise<Track> {
 		return await prisma.track.create({
 			data: {
-				query: url,
+				name: url,
 				url: url,
 				Guild: {
 					connect: { id: guildId }
@@ -28,6 +28,10 @@ class TrackMethods {
 		await prisma.track.deleteMany({
 			where: { guildId }
 		})
+	}
+
+	static async deleteAll(): Promise<void> {
+		await prisma.track.deleteMany()
 	}
 
 	static async getFirstInGuildQueue(guildId: number, take: number): Promise<Track[]>
@@ -63,6 +67,17 @@ const guild = {
 		await this.delete(id)
 		return await prisma.guild.create({
 			data: { id },
+		})
+	},
+
+	async getAll(): Promise<Guild[]>{
+		return await prisma.guild.findMany()
+	},
+
+	async setVoiceChannel(guildId:number, channelId:number): Promise<Guild>{
+		return await prisma.guild.update({
+			where:{ id: guildId },
+			data:{ voiceChannelId: channelId }
 		})
 	},
 

@@ -14,13 +14,15 @@ model User {
 }
 
 model Guild {
-  id    Int     @id @default(autoincrement())
-  Track Track[]
+  id                Int     @id @default(autoincrement())
+  mainTextChannelId Int?
+  voiceChannelId    Int?
+  Track             Track[]
 }
 
 model Track {
   id      Int    @id @default(autoincrement())
-  query   String
+  name    String
   url     String
   guildId Int?
   Guild   Guild? @relation(fields: [guildId], references: [id])
